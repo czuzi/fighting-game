@@ -126,6 +126,32 @@ function hitDetection({ player1, player2 }) {
 	)
 }
 
+function determineWinner() {
+	document.querySelector("#displayText").style.display = "flex"
+	if (player.health === enemy.health) {
+		document.querySelector("#displayText").innerHTML = "Tie"
+	} else if (player.health > enemy.health) {
+		document.querySelector("#displayText").innerHTML = "Blue Wins"
+	} else if (player.health < enemy.health) {
+		document.querySelector("#displayText").innerHTML = "Red Wins"
+	}
+}
+
+let timer = 30
+function decreaseTimer() {
+	if (timer > 0) {
+		setTimeout(decreaseTimer, 1000)
+		timer--
+		document.querySelector("#timer").innerHTML = timer
+	}
+
+	if (timer === 0) {
+		determineWinner()
+	}
+}
+
+decreaseTimer()
+
 function animate() {
 	window.requestAnimationFrame(animate)
 	c.fillStyle = "black"
@@ -160,7 +186,7 @@ function animate() {
 	) {
 		console.log("player hit")
 		player.isAttacking = false
-		enemy.health -= 20
+		enemy.health -= 5
 		document.querySelector("#enemyHealth").style.width = enemy.health + "%"
 	}
 
@@ -173,8 +199,11 @@ function animate() {
 	) {
 		console.log("enemy hit")
 		enemy.isAttacking = false
-		player.health -= 20
+		player.health -= 5
 		document.querySelector("#playerHealth").style.width = player.health + "%"
+	}
+	if (enemy.health <= 0 || player.health <= 0) {
+		determineWinner()
 	}
 }
 
